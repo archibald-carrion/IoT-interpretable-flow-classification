@@ -1,0 +1,5 @@
+/pox
+*.pyc
+/__pycache__
+*.ova
+.~lock.*
