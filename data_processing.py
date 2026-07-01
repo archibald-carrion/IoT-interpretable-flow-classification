@@ -48,4 +48,4 @@ def load_preprocess_data():
         derived_features = [f for f in one_hot_feature_names if f.startswith(col)]
         print(f"- Original column '{col}' was expanded into: {derived_features}")
 
-    return X_encoded, y_encoded, encoded_feature_names, label_encoder, categorical_cols, numeric_cols
+    return X_encoded, y_encoded, encoded_feature_names, label_encoder, categorical_cols, numeric_cols, ct

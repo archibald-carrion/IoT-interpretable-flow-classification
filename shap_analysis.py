@@ -2,12 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import shap
 
-def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max_display=20):
+def plot_shap_dot_summary(shap_values, y_sample, feature_names, class_names, max_display=20):
     """
     Custom dot summary plot: one dot per class per feature.
-    - x-axis: Mean SHAP value for the class
+    - x-axis: Mean SHAP value, computed only over samples whose TRUE label
+      is that class (class-conditioned mean) — NOT averaged across all classes.
     - color: Unique color per class (from tab20 colormap)
-    - size: Mean |SHAP| (importance)
+    - size: |mean SHAP| for that specific (feature, class) pair
     - legend: Maps colors to class names
     """
     # Convert shap_values to (n_samples, n_features, n_classes) if needed
@@ -16,10 +17,18 @@ def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max
 
     n_samples, n_features, n_classes = shap_values.shape
 
-    # Compute mean SHAP per class per feature
-    mean_shap = np.mean(shap_values, axis=0)  # (n_features, n_classes)
+    # --- Class-conditioned mean SHAP: average only over each class's own samples ---
+    # (averaging over ALL balanced samples instead of just the class's own samples
+    #  dilutes/flips the sign for features that are rare-but-strong indicators,
+    #  e.g. one-hot service flags)
+    mean_shap = np.zeros((n_features, n_classes))
+    for c in range(n_classes):
+        mask = (y_sample == c)
+        if mask.sum() == 0:
+            continue
+        mean_shap[:, c] = shap_values[mask, :, c].mean(axis=0)
 
-    # Get top features by total mean |SHAP|
+    # Get top features by total conditioned |SHAP| across classes
     feature_order = np.argsort(np.sum(np.abs(mean_shap), axis=1))[::-1][:max_display]
     mean_shap = mean_shap[feature_order]
     feature_names = [feature_names[i] for i in feature_order]
@@ -30,9 +39,9 @@ def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max
     # Use a colormap with enough distinct colors for all classes
     colors = plt.cm.tab20(np.linspace(0, 1, n_classes))
 
-    # Normalize dot sizes for visibility
-    sizes = np.abs(mean_shap).mean(axis=1)
-    sizes = 100 * (sizes / sizes.max()) + 10  # Scale to [10, 110]
+    # Per-(feature, class) dot size — NOT collapsed across classes anymore
+    sizes_matrix = np.abs(mean_shap)
+    sizes_matrix = 100 * (sizes_matrix / sizes_matrix.max()) + 10  # Scale to [10, 110]
 
     # Plot one dot per class per feature
     for j, class_name in enumerate(class_names):
@@ -40,7 +49,7 @@ def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max
             shap_val = mean_shap[i, j]
             ax.scatter(
                 shap_val, i,
-                s=sizes[i],
+                s=sizes_matrix[i, j],
                 c=[colors[j]],  # Unique color per class
                 alpha=0.8,
                 edgecolors='black',
@@ -50,8 +59,8 @@ def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max
 
     ax.set_yticks(range(len(feature_names)))
     ax.set_yticklabels(feature_names)
-    ax.set_xlabel('Mean SHAP Value (Impact on Model Output)')
-    ax.set_title('SHAP Dot Summary: One Dot = One Class\n(Size = Mean |SHAP|, Color = Class)')
+    ax.set_xlabel('Mean SHAP value, within true class (impact on model output)')
+    ax.set_title('SHAP Dot Summary: One Dot = One Class\n(Size = |mean SHAP| for that class, Color = Class)')
     ax.axvline(0, color='black', linestyle='--', alpha=0.3)
 
     # Add legend outside the plot
@@ -89,13 +98,17 @@ def shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder
     # --- 1. Class-balanced sample (this is the actual fix) ---
     rng = np.random.default_rng(42)
     idx_parts = []
+    y_sample_parts = []
     for c in range(n_classes):
         class_idx = np.where(y_train == c)[0]
         if len(class_idx) == 0:
             continue
         take = min(n_samples_per_class, len(class_idx))
-        idx_parts.append(rng.choice(class_idx, size=take, replace=False))
+        chosen = rng.choice(class_idx, size=take, replace=False)
+        idx_parts.append(chosen)
+        y_sample_parts.append(np.full(take, c))
     sample_idx = np.concatenate(idx_parts)
+    y_sample = np.concatenate(y_sample_parts)  # true class label per row of X_sample
     X_sample = X_train_scaled[sample_idx]
 
     explainer = shap.TreeExplainer(model)
@@ -200,13 +213,7 @@ def shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder
     print("Saved: normalized_shap_feature_importance.png")
 
     # --- Dot summary plot: also use the balanced sample ---
-    fig_height = max(12, n_features * 0.55 + 3)
-    fig, ax = plt.subplots(figsize=(18, fig_height))
-
-    plot_shap_dot_summary(shap_values, X_sample, feature_names, label_encoder.classes_)
-    ax = plt.gca()
-    ax.set_title('SHAP Summary Plot - Random Forest (class-balanced)', fontsize=18, pad=15)
-    plt.tight_layout(rect=[0, 0, 0.88, 1])
-    plt.close()
+    plot_shap_dot_summary(shap_values, y_sample, feature_names, label_encoder.classes_)
+    print("Saved: shap_dot_summary.png")
 
     return shap_values, X_sample
