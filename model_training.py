@@ -105,4 +105,4 @@ def train_evaluate(X, y, feature_names, label_encoder):
     plt.close()
     print("Saved: confusion_matrix.png")
     
-    return results, X_train_scaled, X_test_scaled
+    return results, X_train_scaled, X_test_scaled, y_train

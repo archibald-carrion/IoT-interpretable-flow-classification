@@ -6,8 +6,8 @@ if __name__ == "__main__":
     # preprocess the data
     X_encoded, y_encoded, feature_names, label_encoder, categorical_cols, numeric_cols = load_preprocess_data()
     # train the model
-    results, X_train_scaled, X_test_scaled = train_evaluate(
+    results, X_train_scaled, X_test_scaled, y_train = train_evaluate(
         X_encoded, y_encoded, feature_names, label_encoder
     )
-    #perform SHAP analysis
-    shap_analysis(results, X_train_scaled, feature_names, label_encoder)
+    # perform SHAP analysis
+    shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder)
