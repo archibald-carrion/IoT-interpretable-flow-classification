@@ -2,6 +2,72 @@ import numpy as np
 import matplotlib.pyplot as plt
 import shap
 
+def plot_shap_dot_summary(shap_values, X_sample, feature_names, class_names, max_display=20):
+    """
+    Custom dot summary plot: one dot per class per feature.
+    - x-axis: Mean SHAP value for the class
+    - color: Unique color per class (from tab20 colormap)
+    - size: Mean |SHAP| (importance)
+    - legend: Maps colors to class names
+    """
+    # Convert shap_values to (n_samples, n_features, n_classes) if needed
+    if isinstance(shap_values, list):
+        shap_values = np.stack(shap_values, axis=-1)  # (n_samples, n_features, n_classes)
+
+    n_samples, n_features, n_classes = shap_values.shape
+
+    # Compute mean SHAP per class per feature
+    mean_shap = np.mean(shap_values, axis=0)  # (n_features, n_classes)
+
+    # Get top features by total mean |SHAP|
+    feature_order = np.argsort(np.sum(np.abs(mean_shap), axis=1))[::-1][:max_display]
+    mean_shap = mean_shap[feature_order]
+    feature_names = [feature_names[i] for i in feature_order]
+
+    # Create plot
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    # Use a colormap with enough distinct colors for all classes
+    colors = plt.cm.tab20(np.linspace(0, 1, n_classes))
+
+    # Normalize dot sizes for visibility
+    sizes = np.abs(mean_shap).mean(axis=1)
+    sizes = 100 * (sizes / sizes.max()) + 10  # Scale to [10, 110]
+
+    # Plot one dot per class per feature
+    for j, class_name in enumerate(class_names):
+        for i, feature in enumerate(feature_names):
+            shap_val = mean_shap[i, j]
+            ax.scatter(
+                shap_val, i,
+                s=sizes[i],
+                c=[colors[j]],  # Unique color per class
+                alpha=0.8,
+                edgecolors='black',
+                linewidth=0.5,
+                label=class_name if i == 0 else None  # Only label once per class
+            )
+
+    ax.set_yticks(range(len(feature_names)))
+    ax.set_yticklabels(feature_names)
+    ax.set_xlabel('Mean SHAP Value (Impact on Model Output)')
+    ax.set_title('SHAP Dot Summary: One Dot = One Class\n(Size = Mean |SHAP|, Color = Class)')
+    ax.axvline(0, color='black', linestyle='--', alpha=0.3)
+
+    # Add legend outside the plot
+    handles, labels = ax.get_legend_handles_labels()
+    ax.legend(
+        handles, labels,
+        bbox_to_anchor=(1.05, 1),
+        loc='upper left',
+        fontsize=10,
+        title='Class'
+    )
+
+    plt.tight_layout()
+    plt.savefig('shap_dot_summary.png', dpi=150, bbox_inches='tight')
+    plt.close()
+
 def shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder,
                    n_samples_per_class=100, normalize='within_class'):
     """
@@ -34,6 +100,54 @@ def shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder
 
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_sample)
+
+
+
+
+
+
+
+
+
+    # --- OLD Plot 1: Bar Chart (Feature Importance) only used for comparison with the new one ---
+    fig_height = max(10, n_features * 0.5 + n_classes * 0.4)
+    fig, ax = plt.subplots(figsize=(16, fig_height))
+
+    shap.summary_plot(
+        shap_values,
+        X_train_scaled[:1000],
+        feature_names=feature_names,
+        class_names=label_encoder.classes_,
+        plot_type='bar',
+        show=False,
+        max_display=n_features,
+    )
+
+    ax = plt.gca()
+    ax.set_title('SHAP Feature Importance - Random Forest', fontsize=18, pad=15)
+    ax.tick_params(axis='x', labelsize=12)
+    ax.tick_params(axis='y', labelsize=12)
+    ax.set_xlabel(ax.get_xlabel(), fontsize=13)
+
+    # Fix legend overlap if present
+    legend = ax.get_legend()
+    if legend:
+        legend.set_bbox_to_anchor((1.02, 1))
+        legend.set_loc('upper left')
+        for text in legend.get_texts():
+            text.set_fontsize(11)
+
+    plt.tight_layout(rect=[0, 0, 0.88, 1])  # leave room for legend
+    plt.savefig('non_normalized_shap_feature_importance.png', dpi=150, bbox_inches='tight')
+    plt.close()
+    print("Saved: non_normalized_shap_feature_importance.png")
+
+
+
+
+
+
+
 
     # --- 2. Build importance matrix: (n_features, n_classes) ---
     # SHAP's TreeExplainer output format for multiclass differs by version:
@@ -81,25 +195,18 @@ def shap_analysis(results, X_train_scaled, y_train, feature_names, label_encoder
 
     ax.legend(bbox_to_anchor=(1.02, 1), loc='upper left', fontsize=11)
     plt.tight_layout(rect=[0, 0, 0.88, 1])
-    plt.savefig('shap_feature_importance.png', dpi=150, bbox_inches='tight')
+    plt.savefig('normalized_shap_feature_importance.png', dpi=150, bbox_inches='tight')
     plt.close()
-    print("Saved: shap_feature_importance.png")
+    print("Saved: normalized_shap_feature_importance.png")
 
     # --- Dot summary plot: also use the balanced sample ---
     fig_height = max(12, n_features * 0.55 + 3)
     fig, ax = plt.subplots(figsize=(18, fig_height))
-    shap.summary_plot(
-        shap_values, X_sample,
-        feature_names=feature_names,
-        class_names=label_encoder.classes_,
-        show=False,
-        max_display=n_features,
-    )
+
+    plot_shap_dot_summary(shap_values, X_sample, feature_names, label_encoder.classes_)
     ax = plt.gca()
     ax.set_title('SHAP Summary Plot - Random Forest (class-balanced)', fontsize=18, pad=15)
     plt.tight_layout(rect=[0, 0, 0.88, 1])
-    plt.savefig('shap_summary_plot.png', dpi=150, bbox_inches='tight')
     plt.close()
-    print("Saved: shap_summary_plot.png")
 
     return shap_values, X_sample
