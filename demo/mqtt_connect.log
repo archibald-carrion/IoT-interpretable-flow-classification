@@ -1,0 +1,59 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	mqtt_connect
+#open	2026-07-01-17-51-54
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	proto_name	proto_version	client_id	connect_status	will_topic	will_payload
+#types	time	string	addr	port	addr	port	string	string	string	string	string	string
+1782942700.089289	CPwDED4aFMrGG0ndNb	::1	43356	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.090920	C5e9Zq15PJN4DvXbx7	::1	43372	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.092507	CuZsPK3dUDDxvhhbE	::1	43382	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.094125	CMbSm110tHHfFr4IT2	::1	43394	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.095667	CSz9i4ZHv3FpMjctd	::1	43404	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.097209	CraRTk3T0wX2W4coTb	::1	43420	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.098861	CKJLEw2DD190vhYaxd	::1	43430	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.100516	CrFHlM4LLCIvODQug	::1	43442	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.102139	CSox861goI1nDL7Y6	::1	43452	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.103874	Cd5LUI32qqmEfXdOU6	::1	43468	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.105585	CTE7Uu1vHv5A0jj7Wg	::1	43484	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.107391	Cz7vB51StQ98dbDDu5	::1	43500	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.109227	CDBPOSgbykAKa6rzi	::1	43510	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.111046	C7m3Nh4ukznXNQGODj	::1	43526	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.113002	CZcFwy4nqa4Qiw1Psf	::1	43534	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.114967	Cd3XyZ3ldMhNixcyR1	::1	43546	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.116979	C7NGr22UxbH7EeyzR8	::1	43558	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.119090	CkKR5lgOIel8hgMc	::1	43564	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.121241	Cjp7qv1r2htroR4dX4	::1	43580	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.123378	CYqeHv4SMOy3Fmn9P2	::1	43582	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.125621	C7txTc33su4VIvJdg	::1	43586	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.127767	CFNlEu4t4ONlCv95xg	::1	43598	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.129961	C6Zgi31N0BfNknPV46	::1	43614	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.132136	CLFf12tNdi67HqYg3	::1	43616	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.134338	CzhOPHWJlb8Qc9b1a	::1	43630	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.136528	CUL2d21cxzkEgTrah9	::1	43642	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.138795	CqRvYF2yhfXJnoXct	::1	43650	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.141189	CK1vGy16dub5bbjGzk	::1	43662	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.143752	CZom6YT6jrDpEDug7	::1	43678	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.146400	CLVJTI2qupSKON14qk	::1	43692	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.149069	CVkGel4K9cOsk5coLl	::1	43696	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.151643	CY4SC6Oj7jlDbRwXl	::1	43708	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.154288	CZLpPd1pCoA2RVmfGe	::1	43720	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.156933	CpZm663bwRK0wtF6Nd	::1	43736	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.159521	ChJtMo1oa8gXs8alQb	::1	43738	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.162238	CENqHV226YQ5QyxkE1	::1	43740	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.164926	CFwDH13H3bRAeohlK3	::1	43750	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.167553	CqQwDQrub8NcLwB72	::1	43760	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.170234	C9ctxpXzmoaOKZGY2	::1	43772	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.172888	Cpv9So1Wph0lqvIla	::1	43784	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.175607	CvqzxwnedbkAD2IGc	::1	43792	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.178472	CFk3CA3j8mKUJ5Ixlb	::1	43806	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.181482	CYHCky3nyUc0dZ3Dza	::1	43814	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.184861	Cdox1V37d0R6z4AiBh	::1	43826	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.188288	CEdbGp1EURpQkjrE59	::1	43832	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.191825	C2oAUP1464X5rEkBr1	::1	43834	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.195911	CrlYdBGdwJjXrALZb	::1	43842	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.200111	CRVtCF4SvhGD6GR576	::1	43844	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.204648	CNoq0lR5TI040HB73	::1	43850	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+1782942700.210275	C2lrQS1AqOhvo7WeAa	::1	43860	::1	1883	MQTT	3.1.1	(empty)	Connection Accepted	-	-
+#close	2026-07-01-17-51-54
